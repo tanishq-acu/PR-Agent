@@ -24,7 +24,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install -e git+https://github.com/tanishq-acu/MetaGPT@main
+        pip install https://github.com/tanishq-acu/MetaGPT/archive/main.zip
       
     - name: Create MetaGPT config file
       env:
