@@ -2,6 +2,7 @@ import asyncio
 from metagpt.roles.di.data_interpreter import DataInterpreter
 from metagpt.tools.libs.filesys_interact import ListPythonFiles, InferProgramPurpose, GenerateComments
 import gradio as gr
+## Data Interpreter Code
 async def main(requirement: str):
     role = DataInterpreter(tools=["ListPythonFiles", "InferProgramPurpose", "GenerateComments"], react_mode="react", max_react_loop=10)
     await role.run(requirement)
@@ -21,7 +22,7 @@ def build():
         process_button.click(fn=start, inputs=file_input, outputs=output)
     demo.launch()
     
-    
+
 # build()
 
 if __name__ == "__main__":
