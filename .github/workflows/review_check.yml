@@ -29,7 +29,8 @@ jobs:
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
-        mkdir -p ~./metagpt
+        METAGPT_DIR="$HOME/.metagpt"
+        mkdir -p "$METAGPT_DIR"
         touch ~/.metagpt/config2.yaml
         cat <<EOF > ~/.metagpt/config2.yaml
         llm:
