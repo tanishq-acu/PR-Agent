@@ -21,7 +21,7 @@ jobs:
       with:
         python-version: '3.9'
         cache: 'pip'
-    - run:
+    - run: |
         pip install --upgrade pip
         pip install https://github.com/tanishq-acu/MetaGPT/archive/main.zip
       
