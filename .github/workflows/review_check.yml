@@ -31,6 +31,7 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         mkdir -p ~./metagpt
+        touch ~/.metagpt/config2.yaml
         cat <<EOF > ~/.metagpt/config2.yaml
         llm:
           api_type: "openai"
