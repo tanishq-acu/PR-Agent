@@ -51,7 +51,6 @@ jobs:
         cleaned_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.head.ref }})
         result=$(echo "$cleaned_files" | xargs -I {} echo '"'{}'"' | xargs python .github/workflows/run_check.py)
         result=$(cat feedback.txt)
-        result=$(echo "$result" | tr '\n' ' ')
         {
           echo "result<<EOF"
           echo "$result"
