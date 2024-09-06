@@ -53,8 +53,8 @@ jobs:
         result=$(echo "$result" | tr '\n' ' ')
         {
           echo "result << EOF"
-          echo "$result"
-          echo "EOF"
+          echo $result
+          echo EOF
         } >> "$GITHUB_OUTPUT"
         
 
