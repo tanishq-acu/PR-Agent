@@ -5,7 +5,7 @@ import sys
 import os
 
 REQ_PROMPT = """
-Given the directory/file '{dir}', infer the intended purpose of the python file(s) and then use that to generate feedback for the file using your provided tools. Write only the generated feedback to a file named 'feedback.txt'.
+Given the directory/file '{dir}', use the tool to infer the intended purpose of the python file(s) and then use the tool to generate feedback for the file given the purpose. Finally, write only the generated feedback to a file named 'feedback.txt'.
 """
 
 async def run_check(paths: list[str]):
