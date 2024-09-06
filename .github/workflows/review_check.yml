@@ -1,0 +1,63 @@
+name: Process Changed Files on Pull Request
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  pull-requests: write
+  contents: read
+jobs:
+  process_files:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install -e git+https://github.com/tanishq-acu/MetaGPT@main
+    - name: Fetch base and head branches
+      run: |
+        git fetch origin ${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
+        git fetch origin ${{ github.event.pull_request.head.ref }}:refs/remotes/origin/${{ github.event.pull_request.head.ref }}
+
+    - name: Get diff and run script
+      id: run_script
+      run: |
+        cleaned_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.head.ref }})
+        result=$(echo "$cleaned_files" | xargs -I {} echo '"'../../{}'"' | xargs python .github/workflows/run_check.py)
+        result=$(echo "$result" | tr '\n' ' ')
+        {
+          echo "result << EOF"
+          echo "$result"
+          echo "EOF"
+        } >> "$GITHUB_OUTPUT"
+        
+
+    - name: Check output
+      if: ${{ steps.run_scipt.outputs.result == ' ' }}
+      run: exit 0
+      id: clean_output
+
+    - name: Post result as a comment
+      if: ${{ steps.run_script.outputs.result != ' ' }}
+      env:
+        result: ${{ steps.run_script.outputs.result }}
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: "${{ env.result }}"
+          })
