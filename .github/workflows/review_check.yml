@@ -19,18 +19,19 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.x'
-
-    - name: Install dependencies
-      run: |
+        python-version: '3.9'
+        cache: 'pip'
+    - run: |
         pip install --upgrade pip
-        pip install -e git+https://github.com/tanishq-acu/MetaGPT@main
+        pip install https://github.com/tanishq-acu/MetaGPT/archive/main.zip
       
     - name: Create MetaGPT config file
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
-        mkdir -p ~./metagpt
+        METAGPT_DIR="$HOME/.metagpt"
+        mkdir -p "$METAGPT_DIR"
+        touch ~/.metagpt/config2.yaml
         cat <<EOF > ~/.metagpt/config2.yaml
         llm:
           api_type: "openai"
@@ -48,10 +49,11 @@ jobs:
       id: run_script
       run: |
         cleaned_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} origin/${{ github.event.pull_request.head.ref }})
-        result=$(echo "$cleaned_files" | xargs -I {} echo '"'../../{}'"' | xargs python .github/workflows/run_check.py)
-        result=$(echo "$result" | tr '\n' ' ')
+        result=$(echo "$cleaned_files" | xargs -I {} echo '"'{}'"' | xargs python .github/workflows/run_check.py)
+        result=$(cat feedback.txt)
+        result=$(echo "$result" | tr "\`" "'" | sed "s/\"/'/g")
         {
-          echo "result << EOF"
+          echo "result<<EOF"
           echo "$result"
           echo "EOF"
         } >> "$GITHUB_OUTPUT"
@@ -73,5 +75,5 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: "${{ env.result }}"
+            body: `${{ env.result }}`
           })
