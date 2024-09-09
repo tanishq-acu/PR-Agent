@@ -12,7 +12,11 @@ Given the directory/file '{dir}', infer the program purpose of the python file(s
 
 async def run_check(paths: list[str]):
     role = DataInterpreter(tools=["ListPythonFiles", "InferProgramPurpose", "GenerateComments"], react_mode="react", max_react_loop=10)
-    return await asyncio.gather(*[run_agent(role, directory) for directory in paths])
+    out = []
+    for dir in paths:
+        temp = await run_agent(role,dir)
+        out.append(temp)
+    return out
 
 async def run_agent(agent, path: str):
     agent.rc.memory=Memory()
