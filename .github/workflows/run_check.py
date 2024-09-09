@@ -7,22 +7,19 @@ import sys
 import os
 
 REQ_PROMPT = """
-Given the directory/file '{dir}', infer the program purpose of the python file(s), then generate feedback for the file given the purpose. Finally, write ONLY the generated feedback to a file named 'feedback.txt'.
+Given the file '{dir}', infer the program purpose of the python file. Then, given the purpose, generate feedback for the program. Finally, write ONLY the generated feedback to a file named 'feedback.txt'.
 """
 
 async def run_check(paths: list[str]):
-    role = DataInterpreter(tools=["ListPythonFiles", "InferProgramPurpose", "GenerateComments"], react_mode="react", max_react_loop=10)
+    print(paths)
     out = []
     for dir in paths:
+        role = DataInterpreter(tools=["ListPythonFiles", "InferProgramPurpose", "GenerateComments"], react_mode="react", max_react_loop=10)
         temp = await run_agent(role,dir)
         out.append(temp)
     return out
 
 async def run_agent(agent, path: str):
-    agent.rc.memory=Memory()
-    agent.rc.working_memory = Memory()
-    agent.rc.msg_buffer = MessageQueue()
-    agent.latest_observed_msg = None
     if os.path.isdir(path):
         prompt = REQ_PROMPT.format(dir=path)
         await agent.run(prompt)
