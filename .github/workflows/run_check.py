@@ -1,11 +1,12 @@
 import asyncio
 from metagpt.roles.di.data_interpreter import DataInterpreter
+from metagpt.memory import Memory
 from metagpt.tools.libs.filesys_interact import ListPythonFiles, InferProgramPurpose, GenerateComments
 import sys 
 import os
 
 REQ_PROMPT = """
-Given the directory/file '{dir}', use the tool to infer the intended purpose of the python file(s) and then use the tool to generate feedback for the file given the purpose. Finally, write only the generated feedback to a file named 'feedback.txt'.
+Given the directory/file '{dir}', infer the program purpose of the python file(s), then generate feedback for the file given the purpose. Finally, write only the generated feedback to a file named 'feedback.txt'.
 """
 
 async def run_check(paths: list[str]):
@@ -13,6 +14,7 @@ async def run_check(paths: list[str]):
     return await asyncio.gather(*[run_agent(role, directory) for directory in paths])
 
 async def run_agent(agent, path: str):
+    agent.rc.memory=Memory()
     if os.path.isdir(path):
         prompt = REQ_PROMPT.format(dir=path)
         await agent.run(prompt)
