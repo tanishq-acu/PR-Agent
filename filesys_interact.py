@@ -34,7 +34,7 @@ COMMENT_PROMPT = """
 Given a summary of the overall purpose of a python file, a few general programming rules, and a snippet from that python file:
 - Ensure that the code in the snippet follows the provided general rules. 
 - Ensure there are no glaring issues with the program's functionality or logic.
-Respond with "LGTM" if there are no issues in the program with regards to the rules or logic. If and only if there are issues, then generate ONLY a few short, concise, bullet-point comments about them.
+Respond with "LGTM" if there are no issues in the program with regards to the rules or logic. If and only if there are issues, then generate ONLY a few short, concise, bullet-point comments about them. Do not include anything besides the bullet point suggestions in your response.
 ##### PURPOSE:
 {purpose}
 #####
