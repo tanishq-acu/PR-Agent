@@ -9,22 +9,13 @@ permissions:
 jobs:
   process_files:
     runs-on: ubuntu-latest
-
+    container:
+      image: tanishqacu/code-reviews:pr
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
         fetch-depth: 0 
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-
-    - name: Install dependencies
-      run: |
-        pip install --upgrade pip
-        pip install -e git+https://github.com/tanishq-acu/MetaGPT@main
       
     - name: Create MetaGPT config file
       env:
