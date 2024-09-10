@@ -34,7 +34,7 @@ async def run_agent(agent: DataInterpreter, path: str):
         agent: DataInterpreter = The LLM-agent to utilize. 
         path: str = The path/directory to the python file.
     Returns:
-        str | None: The agent's response for that particular directory as a formatted string, or None. 
+        str | None: The agent's response for that particular directory as a formatted string.
     """
     if os.path.isdir(path):
         prompt = REQ_PROMPT.format(dir=path)
