@@ -19,8 +19,12 @@ async def run_check(paths: list[str]):
     Returns:
         list[str] = List of responses. 
     """
-    role = DataInterpreter(tools=["ListPythonFiles", "InferProgramPurpose", "GenerateComments"], react_mode="react", max_react_loop=10)
-    return await asyncio.gather(*[run_agent(role, directory) for directory in paths])
+    out = []
+    for dir in paths:
+        role = DataInterpreter(tools=["ListPythonFiles", "InferProgramPurpose", "GenerateComments"], react_mode="react", max_react_loop=10)
+        temp = await run_agent(role,dir)
+        out.append(temp)
+    return out
 
 async def run_agent(agent: DataInterpreter, path: str):
     """
