@@ -1,11 +1,13 @@
 import asyncio
 from metagpt.roles.di.data_interpreter import DataInterpreter
+from metagpt.memory import Memory
+from metagpt.schema import MessageQueue
 from metagpt.tools.libs.filesys_interact import ListPythonFiles, InferProgramPurpose, GenerateComments
 import sys 
 import os
 
 REQ_PROMPT = """
-Given the directory/file '{dir}', infer the intended purpose of the python file(s) and then use that to generate feedback for the file using your provided tools. Write only the generated feedback to a file named 'feedback.txt'.
+Given the file '{dir}', infer the program purpose of the python file. Then, given the purpose, generate feedback for the program. Finally, write ONLY the generated feedback to a file named 'feedback.txt'.
 """
 
 async def run_check(paths: list[str]):
@@ -34,8 +36,10 @@ async def run_agent(agent: DataInterpreter, path: str):
         prompt = REQ_PROMPT.format(dir=path)
         await agent.run(prompt)
         if os.path.exists("feedback.txt"):
-            file= open("feedback.txt", "r")
-            return f"{path}:\n{file.read()}\n"
+            file = open("feedback.txt", "r")
+            ret = f"{path}:\n{file.read()}\n"
+            file.close()
+            return ret
         else:
             return None
     elif os.path.exists(path):
@@ -44,7 +48,9 @@ async def run_agent(agent: DataInterpreter, path: str):
             await agent.run(prompt)
             if os.path.exists("feedback.txt"):
                 file = open("feedback.txt", "r")
-                return f"{path}:\n{file.read()}\n"
+                ret= f"{path}:\n{file.read()}\n"
+                file.close()
+                return ret
             else:
                 return None
         else:
@@ -62,4 +68,6 @@ if __name__ == "__main__":
         for item in res:
             if item is not None:
                 total += item
-        print(total)
+        with open("feedback.txt", "w") as feedback:
+            feedback.write(total)
+            
