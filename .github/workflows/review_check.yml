@@ -34,6 +34,7 @@ jobs:
         EOF
     - name: Fetch base and head branches
       run: |
+        git config --global --add safe.directory /__w/PR-Agent/PR-Agent
         git fetch origin ${{ github.event.pull_request.base.ref }}:refs/remotes/origin/${{ github.event.pull_request.base.ref }}
         git fetch origin ${{ github.event.pull_request.head.ref }}:refs/remotes/origin/${{ github.event.pull_request.head.ref }}
 
