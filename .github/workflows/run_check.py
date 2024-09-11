@@ -6,6 +6,8 @@ from metagpt.tools.libs.filesys_interact import ListPythonFiles, InferProgramPur
 import sys 
 import os
 
+# Constants:
+ 
 REQ_PROMPT = """
 Given the file '{dir}', infer the program purpose of the python file. Then, given the purpose, generate feedback for the program. Finally, write ONLY the generated feedback to a file named 'feedback.txt'.
 """
