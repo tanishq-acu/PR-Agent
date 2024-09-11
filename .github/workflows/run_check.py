@@ -5,7 +5,8 @@ from metagpt.schema import MessageQueue
 from metagpt.tools.libs.filesys_interact import ListPythonFiles, InferProgramPurpose, GenerateComments
 import sys 
 import os
-# Run check file
+
+# Constants:
 
 REQ_PROMPT = """
 Given the file '{dir}', infer the program purpose of the python file. Then, given the purpose, generate feedback for the program. Finally, write ONLY the generated feedback to a file named 'feedback.txt'.
