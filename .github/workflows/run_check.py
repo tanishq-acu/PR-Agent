@@ -22,8 +22,8 @@ async def agent_process_dirs(paths: list[str]):
     responses = []
     for item in paths:
         role = DataInterpreter(tools=["ListPythonFiles", "InferProgramPurpose", "GenerateComments"], react_mode="react", max_react_loop=10)
-        temp = await run_agent_directory(role,item)
-        responses.append(temp)
+        response = await run_agent_directory(role,item)
+        responses.append(response)
     return responses
 
 async def run_agent_directory(agent: DataInterpreter, path: str):
