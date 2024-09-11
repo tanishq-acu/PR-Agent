@@ -7,7 +7,7 @@ import sys
 import os
 
 REQ_PROMPT = """
-Given the file '{dir}', infer the program purpose of the python file. Then, given the purpose, generate feedback for the program. Finally, write ONLY the generated feedback to a file named 'feedback.txt'.
+Given the file '{dir}', use tools to infer the program purpose of the python file. Then, using the tool response for the purpose, use tools to generate feedback for the program. Finally, write the generated feedback to a file named 'feedback.txt'.
 """
 
 async def agent_process_dirs(paths: list[str]):
