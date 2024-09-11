@@ -17,7 +17,7 @@ async def agent_process_dirs(paths: list[str]):
     Params:
         paths: list[str] = List of directories as strings. 
     Returns:
-        list[str] = List of responses. 
+        list[str | None] = List of responses. 
     """
     responses = []
     for item in paths:
@@ -34,7 +34,7 @@ async def run_agent_directory(agent: DataInterpreter, path: str):
         agent: DataInterpreter = The LLM-agent to utilize. 
         path: str = The path/directory to the python file.
     Returns:
-        Optional[str]: The agent's response for that particular directory as a formatted string.
+        str | None: The agent's response for that particular directory as a formatted string.
     """
     if os.path.isdir(path):
         prompt = REQ_PROMPT.format(dir=path)
