@@ -26,6 +26,6 @@ def build():
 # build()
 
 if __name__ == "__main__":
-    dir = "/Users/tanishq/Documents/MetaGPT/Testers/app.py"
-    req = f"Given the directory/file '{dir}', infer the intended purpose of the python file(s) and then use that to generate comments on the file using your provided tools. Write the generated comments to a file named 'feedback.txt'."
+    dir = "/Users/tanishq/Documents/MetaGPT/PR-Agent/.github/workflows/run_check.py"
+    req = f"Given the file '{dir}', infer the purpose of the python program. Then, generate feedback for the program. Finally, write the generated feedback from function output directly to a file named 'feedback.txt'."
     print(asyncio.run(main(req)))
