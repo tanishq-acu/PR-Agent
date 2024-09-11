@@ -11,7 +11,7 @@ REQ_PROMPT = """
 Given the file '{dir}', infer the program purpose of the python file. Then, given the purpose, generate feedback for the program. Finally, write ONLY the generated feedback to a file named 'feedback.txt'.
 """
 
-async def run_check(paths: list[str]):
+async def agent_process_directories(paths: list[str]):
     """
     Run agent on given directories. 
 
@@ -23,11 +23,11 @@ async def run_check(paths: list[str]):
     out = []
     for dir in paths:
         role = DataInterpreter(tools=["ListPythonFiles", "InferProgramPurpose", "GenerateComments"], react_mode="react", max_react_loop=10)
-        temp = await run_agent(role,dir)
+        temp = await run_agent_directory(role,dir)
         out.append(temp)
     return out
 
-async def run_agent(agent: DataInterpreter, path: str):
+async def run_agent_directory(agent: DataInterpreter, path: str):
     """
     Run agent method. 
 
@@ -41,9 +41,8 @@ async def run_agent(agent: DataInterpreter, path: str):
         prompt = REQ_PROMPT.format(dir=path)
         await agent.run(prompt)
         if os.path.exists("feedback.txt"):
-            file = open("feedback.txt", "r")
-            ret = f"{path}:\n{file.read()}\n"
-            file.close()
+            with open("feedback.txt", "r") as file:
+                ret = f"{path}:\n{file.read()}\n"
             return ret
         else:
             return None
@@ -52,9 +51,8 @@ async def run_agent(agent: DataInterpreter, path: str):
             prompt = REQ_PROMPT.format(dir = path)
             await agent.run(prompt)
             if os.path.exists("feedback.txt"):
-                file = open("feedback.txt", "r")
-                ret= f"{path}:\n{file.read()}\n"
-                file.close()
+                with open("feedback.txt", "r") as file:
+                    ret= f"{path}:\n{file.read()}\n"
                 return ret
             else:
                 return None
@@ -68,7 +66,7 @@ if __name__ == "__main__":
     if len(sys.argv) <= 1:
         pass
     else:
-        res = asyncio.run(run_check(sys.argv[1:]))
+        res = asyncio.run(agent_process_directories(sys.argv[1:]))
         total = ""
         for item in res:
             if item is not None:
