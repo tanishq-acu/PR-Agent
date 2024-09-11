@@ -27,7 +27,7 @@ jobs:
         cat <<EOF > ~/.metagpt/config2.yaml
         llm:
           api_type: "openai"
-          model: "gpt-4o"
+          model: "gpt-4o-mini"
           pricing_plan: "gpt-4"
           base_url: "https://api.openai.com/v1"
           api_key: "$OPENAI_API_KEY" 
