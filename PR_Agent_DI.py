@@ -3,11 +3,13 @@ from metagpt.roles.di.data_interpreter import DataInterpreter
 from metagpt.tools.libs.filesys_interact import ListPythonFiles, InferProgramPurpose, GenerateComments
 import gradio as gr
 
+# Agent Test file
+
 async def main(requirement: str):
     role = DataInterpreter(tools=["ListPythonFiles", "InferProgramPurpose", "GenerateComments"], react_mode="react", max_react_loop=10)
     await role.run(requirement)
-    file= open("feedback.txt", "r")
-    return file.read()
+    feedback_file= open("feedback.txt", "r")
+    return feedback_file.read()
 def start(dir: str):
     req = f"Given the directory/file '{dir}', infer the intended purpose of the python file(s) and then use that to generate comments on the file using your provided tools. Write the generated comments to a file named 'feedback.txt'."
     return asyncio.run(main(req))
