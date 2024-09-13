@@ -7,26 +7,41 @@ import sys
 import os
 
 REQ_PROMPT = """
-Given the file '{dir}', infer the program purpose of the python file. Then, given the purpose, generate feedback for the program. Finally, write ONLY the generated feedback to a file named 'feedback.txt'.
+Given the file '{dir}', infer the purpose of the python program. Then, generate feedback for the program. Finally, write the generated feedback from function output directly to a file named 'feedback.txt'.
 """
 
-async def run_check(paths: list[str]):
-    print(paths)
-    out = []
-    for dir in paths:
-        role = DataInterpreter(tools=["ListPythonFiles", "InferProgramPurpose", "GenerateComments"], react_mode="react", max_react_loop=10)
-        temp = await run_agent(role,dir)
-        out.append(temp)
-    return out
+async def agent_process_dirs(paths: list[str]):
+    """
+    Run agent on given directories. 
 
-async def run_agent(agent, path: str):
+    Params:
+        paths: list[str] = List of directories as strings. 
+    Returns:
+        list[str | None] = List of responses. 
+    """
+    responses = []
+    for item in paths:
+        role = DataInterpreter(tools=["ListPythonFiles", "InferProgramPurpose", "GenerateComments"], react_mode="react", max_react_loop=10)
+        response = await run_agent_directory(role,item)
+        responses.append(response)
+    return responses
+
+async def run_agent_directory(agent: DataInterpreter, path: str):
+    """
+    Run agent method. 
+
+    Params:
+        agent: DataInterpreter = The LLM-agent to utilize. 
+        path: str = The path/directory to the python file.
+    Returns:
+        str | None: The agent's response for that particular directory as a formatted string.
+    """
     if os.path.isdir(path):
         prompt = REQ_PROMPT.format(dir=path)
         await agent.run(prompt)
         if os.path.exists("feedback.txt"):
-            file = open("feedback.txt", "r")
-            ret = f"{path}:\n{file.read()}\n"
-            file.close()
+            with open("feedback.txt", "r") as file:
+                ret = f"{path}:\n{file.read()}\n"
             return ret
         else:
             return None
@@ -35,9 +50,8 @@ async def run_agent(agent, path: str):
             prompt = REQ_PROMPT.format(dir = path)
             await agent.run(prompt)
             if os.path.exists("feedback.txt"):
-                file = open("feedback.txt", "r")
-                ret= f"{path}:\n{file.read()}\n"
-                file.close()
+                with open("feedback.txt", "r") as file:
+                    ret= f"{path}:\n{file.read()}\n"
                 return ret
             else:
                 return None
@@ -51,7 +65,7 @@ if __name__ == "__main__":
     if len(sys.argv) <= 1:
         pass
     else:
-        res = asyncio.run(run_check(sys.argv[1:]))
+        res = asyncio.run(agent_process_dirs(sys.argv[1:]))
         total = ""
         for item in res:
             if item is not None:
