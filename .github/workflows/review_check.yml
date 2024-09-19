@@ -53,10 +53,10 @@ jobs:
         
 
     - name: Check output
-      if: ${{ steps.run_scipt.outputs.result == ' ' }}
+      if: ${{ steps.run_scipt.outputs.result == ' '  || steps.run_script.outputs.result == '' }}
       run: exit 0
       id: clean_output
-
+      
     - name: Post result as a comment
       if: ${{ steps.run_script.outputs.result != ' ' }}
       env:
