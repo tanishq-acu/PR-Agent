@@ -45,7 +45,6 @@ async def run_agent_directory(agent: DataInterpreter, path: str):
             return ret
         else:
             return None
-        
     elif os.path.exists(path):
         if path.endswith(".py"):
             prompt = REQ_PROMPT.format(dir = path)
@@ -54,6 +53,7 @@ async def run_agent_directory(agent: DataInterpreter, path: str):
                 with open("feedback.txt", "r") as file:
                     ret= f"{path}:\n{file.read()}\n"
                 return ret
+            
             else:
                 return None
         else:
