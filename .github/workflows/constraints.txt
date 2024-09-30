@@ -1,0 +1,5 @@
+1. Choose descriptive and meaningful names for variables, functions, and classes unless they are in loops.
+2. Ensure variable typing is made clear with type hints.
+3. Properly document your code with docstrings and comments if its functionality is not already obvious.
+4. Avoid excessively using global variables in your code.
+5. Ensure proper error handling whenever it may be needed.
